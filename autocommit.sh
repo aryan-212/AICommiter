@@ -4,6 +4,9 @@
 GOOGLE_API_KEY="AIzaSyAxV6iLZuwJMeJqkw1jDIPQm6BS0DTTG1g"
 REPO_DIR=$(pwd)
 BRANCH_NAME="master"
+LOG_FILE="git_auto_commit.log"
+DRY_RUN=0
+UNDO_LAST=0
 
 # Function to display help message
 function display_help() {
@@ -13,6 +16,8 @@ function display_help() {
   echo "  -h, --help          Display this help message"
   echo "  -d, --directory     Set the directory of the Git repository"
   echo "  -b, --branch        Set the branch to push changes to"
+  echo "  -n, --dry-run       Perform a trial run with no changes made"
+  echo "  -u, --undo          Undo the last commit"
 }
 
 # Parse command-line arguments
@@ -40,6 +45,14 @@ while (( "$#" )); do
         exit 1
       fi
       ;;
+    -n|--dry-run)
+      DRY_RUN=1
+      shift
+      ;;
+    -u|--undo)
+      UNDO_LAST=1
+      shift
+      ;;
     --) # end argument parsing
       shift
       break
@@ -60,6 +73,13 @@ cd "$REPO_DIR" || {
   echo "Directory $REPO_DIR not found."
   exit 1
 }
+
+# If undo flag is set, undo the last commit
+if [ $UNDO_LAST -eq 1 ]; then
+  git reset --soft HEAD~1
+  echo "Last commit has been undone."
+  exit 0
+fi
 
 git add .
 
@@ -98,6 +118,12 @@ COMMIT_MESSAGE=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text'
 if [ -z "$COMMIT_MESSAGE" ]; then
   echo "Failed to generate commit message."
   exit 1
+fi
+
+# If dry run flag is set, print the commit message and exit
+if [ $DRY_RUN -eq 1 ]; then
+  echo "Dry run: Commit message would be: $COMMIT_MESSAGE"
+  exit 0
 fi
 
 # Commit the changes
