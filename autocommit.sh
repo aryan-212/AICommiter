@@ -42,7 +42,7 @@ RESPONSE=$(curl -s -X POST \
   -d "$REQUEST_BODY" 2>/dev/null)
 
 # Print the raw API response for debugging
-echo "Raw API response: $RESPONSE"
+# echo "Raw API response: $RESPONSE"
 
 # Extract the commit message from the response
 COMMIT_MESSAGE=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text')
