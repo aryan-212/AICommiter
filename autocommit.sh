@@ -132,4 +132,3 @@ git commit -m "$COMMIT_MESSAGE"
 # Push the changes to the correct branch
 git push origin "$BRANCH_NAME"
 echo "Changes committed and pushed with message: $COMMIT_MESSAGE"
-exit 0
