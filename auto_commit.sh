@@ -2,7 +2,7 @@
 
 # Set your variables
 GOOGLE_API_KEY="AIzaSyAxV6iLZuwJMeJqkw1jDIPQm6BS0DTTG1g"
-REPO_DIR="/home/aryan/DSAGrind"
+REPO_DIR=$(pwd)
 BRANCH_NAME="master"
 
 # Navigate to your Git repository
