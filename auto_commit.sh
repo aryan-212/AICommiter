@@ -20,15 +20,15 @@ if git diff --cached --quiet; then
 fi
 
 # Prepare the data to send to the Gemini API
-STAGED_CHANGES=$(git diff --cached --pretty=format:"%b")
-ESCAPED_CHANGES=$(echo "$STAGED_CHANGES" | jq -Rsa . | jq -r @json)  # Escape special characters
+STAGED_CHANGES=$(git diff --cached)
+ESCAPED_CHANGES=$(echo "$STAGED_CHANGES" | jq -Rsa . | jq -r @json) # Escape special characters
 
 REQUEST_BODY=$(
   cat <<EOF
 {
   "contents": [{
     "parts": [{
-      "text": "Generate a commit message for the following changes: $ESCAPED_CHANGES"
+      "text": "Generate a commit message for the following changes: $STAGED_CHANGES"
     }]
   }]
 }
