@@ -26,6 +26,16 @@ function display_help() {
   echo -e "${CYAN}  -n, --dry-run       Perform a trial run with no changes made${RESET}"
   echo -e "${CYAN}  -u, --undo          Undo the last commit${RESET}"
 }
+function gotta_push() {
+  MSG=$(git push origin main $BRANCH_NAME)
+  if [["$MSG" == *"error"*]]; then
+    echo -e "${CYAN}Error while pushing, force pushing now...${RESET}"
+    git push --force
+  else
+    echo -e "${GREEN}Successfully pushed to $BRANCH_NAME ${RESET}"
+
+  fi
+}
 
 # Parse command-line arguments
 while (("$#")); do
@@ -148,7 +158,7 @@ while true; do
   [Yy]*)
     # Commit the changes
     git commit -m "$COMMIT_MESSAGE"
-    git push origin "$BRANCH_NAME"
+    gotta_push
     echo -e "${GREEN}Changes committed and pushed with message: $COMMIT_MESSAGE${RESET}"
     exit 0
     ;;
@@ -165,4 +175,3 @@ while true; do
     ;;
   esac
 done
-
